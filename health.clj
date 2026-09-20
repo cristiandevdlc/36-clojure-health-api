@@ -1,0 +1,7 @@
+(import '(com.sun.net.httpserver HttpServer HttpHandler))
+(import '(java.net InetSocketAddress))
+(def server (HttpServer/create (InetSocketAddress. 8091) 0))
+(.createContext server "/health" (reify HttpHandler (handle [_ exchange] (let [body (.getBytes "{\"status\":\"ok\",\"service\":\"clojure-health\"}" "UTF-8")] (.sendResponseHeaders exchange 200 (count body)) (.write (.getResponseBody exchange) body) (.close exchange)))))
+(.start server)
+(println "Clojure Health API: http://localhost:8091/health")
+@(promise)
